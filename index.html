@@ -4,228 +4,536 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>S3 Lehigh | Contractor Directory</title>
+<title>S3 Contractors | Lehigh County</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+:root{
+    --navy:#0b2f50;
+    --blue:#135b91;
+    --light-blue:#eaf3f9;
+    --background:#f5f7f9;
+    --border:#dfe5ea;
+    --text:#263747;
+    --muted:#6d7d8b;
 }
 
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f4f7fa;
-    color: #172033;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--background);
+    color:var(--text);
 }
 
 /* HEADER */
 
-header {
-    background: white;
-    border-bottom: 1px solid #e2e7ec;
-    padding: 18px 7%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+header{
+    height:78px;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 6%;
+    border-bottom:1px solid #e6e9ed;
 }
 
-.logo h1 {
-    color: #164b80;
-    font-size: 25px;
+.brand{
+    display:flex;
+    align-items:center;
+    gap:18px;
 }
 
-.logo p {
-    color: #6c7885;
-    font-size: 12px;
-    letter-spacing: 1px;
-    margin-top: 3px;
+.brand-main{
+    font-size:23px;
+    font-weight:800;
+    color:var(--navy);
+    letter-spacing:.5px;
 }
 
-nav a {
-    color: #34495e;
-    text-decoration: none;
-    margin-left: 28px;
-    font-size: 14px;
+.brand-main span{
+    display:block;
+    font-size:10px;
+    letter-spacing:3px;
+    color:#647587;
+    margin-top:3px;
+}
+
+.brand-tagline{
+    border-left:1px solid #d6dce2;
+    padding-left:18px;
+    font-size:11px;
+    color:#6b7884;
+    letter-spacing:1.2px;
+}
+
+nav a{
+    text-decoration:none;
+    color:#425466;
+    font-size:14px;
+    margin-left:28px;
+}
+
+nav a:hover{
+    color:var(--blue);
 }
 
 /* HERO */
 
-.hero {
+.hero{
+    position:relative;
+    min-height:430px;
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+
+    /*
+       We will add the actual tree image file next.
+       This gradient stays behind it so the page still looks good
+       before the image is uploaded.
+    */
+
     background:
-        linear-gradient(rgba(10,43,76,.82), rgba(10,43,76,.82)),
-        linear-gradient(135deg,#285d8c,#0d3155);
+        linear-gradient(
+            90deg,
+            rgba(5,35,61,.94) 0%,
+            rgba(7,49,82,.88) 50%,
+            rgba(10,58,91,.70) 100%
+        ),
+        url("lehigh-trees.jpg");
 
-    color: white;
-    padding: 75px 20px;
-    text-align: center;
+    background-size:cover;
+    background-position:center;
 }
 
-.hero h2 {
-    font-size: 42px;
-    margin-bottom: 12px;
+.hero-content{
+    width:88%;
+    max-width:1180px;
+    margin:auto;
+    color:white;
 }
 
-.hero p {
-    font-size: 17px;
-    opacity: .9;
-    margin-bottom: 30px;
+.eyebrow{
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:3px;
+    margin-bottom:16px;
+    color:#d6e6f3;
 }
 
-.search-box {
-    max-width: 720px;
-    margin: auto;
+.hero h1{
+    font-size:47px;
+    line-height:1.08;
+    max-width:720px;
+    margin-bottom:15px;
 }
 
-.search-box input {
-    width: 100%;
-    padding: 18px 22px;
-    border-radius: 7px;
-    border: none;
-    font-size: 16px;
-    outline: none;
+.hero-description{
+    max-width:670px;
+    font-size:17px;
+    line-height:1.6;
+    color:#e3edf5;
 }
 
-/* SERVICE FILTERS */
-
-.filters {
-    background: white;
-    padding: 22px 5%;
-    text-align: center;
-    border-bottom: 1px solid #e5e8eb;
+.search{
+    display:flex;
+    max-width:760px;
+    margin-top:28px;
+    background:white;
+    border-radius:6px;
+    overflow:hidden;
+    box-shadow:0 8px 25px rgba(0,0,0,.17);
 }
 
-.filter-btn {
-    border: 1px solid #ccd5df;
-    background: white;
-    color: #36506a;
-    padding: 9px 15px;
-    margin: 5px;
-    border-radius: 20px;
-    cursor: pointer;
+.search input{
+    flex:1;
+    border:0;
+    padding:18px 20px;
+    font-size:15px;
+    outline:none;
+    min-width:0;
 }
 
-.filter-btn:hover,
-.filter-btn.active {
-    background: #164b80;
-    color: white;
-    border-color: #164b80;
+.search button{
+    border:0;
+    background:#123f68;
+    color:white;
+    padding:0 28px;
+    font-size:14px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
-/* DIRECTORY */
-
-.directory {
-    max-width: 1150px;
-    margin: auto;
-    padding: 45px 25px 70px;
+.search button:hover{
+    background:#0a3154;
 }
 
-.directory-header {
-    margin-bottom: 25px;
+.hero-benefits{
+    display:flex;
+    gap:30px;
+    flex-wrap:wrap;
+    margin-top:27px;
 }
 
-.directory-header h2 {
-    font-size: 27px;
-    margin-bottom: 6px;
+.benefit{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    color:#e5eef5;
 }
 
-.directory-header p {
-    color: #718096;
+.benefit-icon{
+    width:29px;
+    height:29px;
+    border:1px solid rgba(255,255,255,.5);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 20px;
+/* MAIN DIRECTORY */
+
+.directory{
+    max-width:1220px;
+    margin:0 auto;
+    padding:42px 22px 70px;
 }
 
-.card {
-    background: white;
-    border: 1px solid #e0e5ea;
-    border-radius: 9px;
-    padding: 23px;
-    box-shadow: 0 3px 12px rgba(0,0,0,.04);
+.directory-title{
+    margin-bottom:28px;
 }
 
-.card h3 {
-    color: #173f67;
-    margin-bottom: 7px;
-    font-size: 18px;
+.directory-title h2{
+    color:var(--navy);
+    font-size:28px;
+    margin-bottom:7px;
 }
 
-.owner {
-    color: #687789;
-    font-size: 13px;
-    margin-bottom: 17px;
+.directory-title p{
+    color:var(--muted);
+    font-size:14px;
 }
 
-.info {
-    font-size: 14px;
-    line-height: 1.8;
-    color: #465568;
+.directory-layout{
+    display:grid;
+    grid-template-columns:235px 1fr;
+    gap:30px;
 }
 
-.info a {
-    color: #1769aa;
-    text-decoration: none;
+/* SIDEBAR */
+
+.sidebar{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:22px;
+    align-self:start;
 }
 
-.tags {
-    margin-top: 17px;
+.sidebar h3{
+    color:var(--navy);
+    font-size:15px;
+    margin-bottom:17px;
 }
 
-.tag {
-    display: inline-block;
-    background: #e9f2fa;
-    color: #17609a;
-    padding: 5px 9px;
-    border-radius: 5px;
-    font-size: 11px;
-    margin: 3px 2px;
+.filter{
+    width:100%;
+    border:0;
+    background:transparent;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 9px;
+    border-radius:5px;
+    color:#526273;
+    cursor:pointer;
+    text-align:left;
+    margin-bottom:3px;
+}
+
+.filter:hover{
+    background:#f0f5f9;
+}
+
+.filter.active{
+    background:#e8f2f9;
+    color:#145b8e;
+    font-weight:bold;
+}
+
+.count{
+    background:#edf1f4;
+    color:#667582;
+    border-radius:20px;
+    padding:2px 7px;
+    font-size:10px;
+}
+
+.filter.active .count{
+    background:#fff;
+    color:#145b8e;
+}
+
+.sidebar hr{
+    border:0;
+    border-top:1px solid #e4e8ec;
+    margin:20px 0;
+}
+
+.sidebar-note{
+    font-size:12px;
+    line-height:1.6;
+    color:#7a8792;
+}
+
+/* LISTINGS */
+
+.listing-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:17px;
+}
+
+.listing-header strong{
+    color:#3e5060;
+    font-size:14px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:17px;
+}
+
+.card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:22px;
+    min-height:260px;
+    display:flex;
+    flex-direction:column;
+    transition:.2s;
+}
+
+.card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 7px 20px rgba(31,54,76,.08);
+}
+
+.card-top{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:flex-start;
+    margin-bottom:8px;
+}
+
+.card h3{
+    color:#123f68;
+    font-size:18px;
+    line-height:1.3;
+}
+
+.business-missing{
+    color:#8a96a1;
+    font-size:11px;
+    margin-top:3px;
+}
+
+.owner{
+    color:#667686;
+    font-size:13px;
+    margin-bottom:14px;
+}
+
+.category{
+    background:#eaf3f9;
+    color:#145d91;
+    border-radius:20px;
+    padding:5px 9px;
+    font-size:10px;
+    white-space:nowrap;
+}
+
+.details{
+    font-size:13px;
+    line-height:1.65;
+    color:#526272;
+}
+
+.detail{
+    margin-bottom:5px;
+    word-break:break-word;
+}
+
+.detail a{
+    color:#17659b;
+    text-decoration:none;
+}
+
+.detail a:hover{
+    text-decoration:underline;
+}
+
+.services{
+    margin-top:auto;
+    padding-top:15px;
+    border-top:1px solid #edf0f2;
+}
+
+.services-label{
+    font-size:10px;
+    font-weight:bold;
+    color:#7b8791;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+    margin-bottom:7px;
+}
+
+.tag{
+    display:inline-block;
+    padding:5px 8px;
+    margin:2px 2px 2px 0;
+    background:#edf4f8;
+    color:#245d83;
+    border-radius:4px;
+    font-size:10px;
+}
+
+.no-results{
+    display:none;
+    background:white;
+    padding:40px;
+    text-align:center;
+    border:1px solid var(--border);
+    border-radius:8px;
+    color:#71808d;
 }
 
 /* FOOTER */
 
-footer {
-    background: #0d2e50;
-    color: white;
-    padding: 38px 20px;
-    text-align: center;
+footer{
+    background:#092b49;
+    color:white;
+    padding:45px 7% 25px;
 }
 
-footer h3 {
-    margin-bottom: 8px;
+.footer-inner{
+    max-width:1180px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1.3fr 1fr 1.5fr;
+    gap:50px;
 }
 
-footer p {
-    color: #c6d3df;
-    font-size: 13px;
-    margin-top: 7px;
+footer h3{
+    font-size:18px;
+    margin-bottom:10px;
 }
 
-/* MOBILE */
-
-@media(max-width:900px) {
-    .grid {
-        grid-template-columns: repeat(2,1fr);
-    }
+footer h4{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+    margin-bottom:13px;
 }
 
-@media(max-width:600px) {
-    nav {
-        display:none;
-    }
+footer p{
+    color:#b9cad7;
+    font-size:12px;
+    line-height:1.7;
+}
 
-    .hero h2 {
-        font-size: 30px;
-    }
+.footer-links a{
+    display:block;
+    color:#b9cad7;
+    text-decoration:none;
+    font-size:12px;
+    margin-bottom:8px;
+}
 
-    .grid {
+.copyright{
+    max-width:1180px;
+    margin:35px auto 0;
+    border-top:1px solid rgba(255,255,255,.15);
+    padding-top:18px;
+    font-size:10px;
+    color:#91a8b9;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+    .directory-layout{
         grid-template-columns:1fr;
     }
 
-    header {
-        padding:16px 20px;
+    .sidebar{
+        display:flex;
+        flex-wrap:wrap;
+        gap:5px;
+    }
+
+    .sidebar h3,
+    .sidebar hr,
+    .sidebar-note{
+        width:100%;
+    }
+
+    .filter{
+        width:auto;
+    }
+}
+
+@media(max-width:720px){
+    nav,
+    .brand-tagline{
+        display:none;
+    }
+
+    header{
+        height:68px;
+        padding:0 20px;
+    }
+
+    .hero{
+        min-height:450px;
+    }
+
+    .hero h1{
+        font-size:35px;
+    }
+
+    .hero-content{
+        width:90%;
+    }
+
+    .search button{
+        padding:0 17px;
+    }
+
+    .hero-benefits{
+        gap:12px;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .footer-inner{
+        grid-template-columns:1fr;
+        gap:25px;
     }
 }
 </style>
@@ -234,323 +542,593 @@ footer p {
 <body>
 
 <header>
+    <div class="brand">
+        <div class="brand-main">
+            S3 CONTRACTORS
+            <span>LEHIGH COUNTY</span>
+        </div>
 
-<div class="logo">
-    <h1>S3 LEHIGH</h1>
-    <p>CONTRACTOR DIRECTORY</p>
-</div>
+        <div class="brand-tagline">
+            LOCAL CONTRACTORS.<br>
+            STRONGER COMMUNITIES.
+        </div>
+    </div>
 
-<nav>
-    <a href="#directory">Directory</a>
-    <a href="#about">About</a>
-</nav>
-
+    <nav>
+        <a href="#">Home</a>
+        <a href="#directory">Contractor Directory</a>
+        <a href="#about">About</a>
+    </nav>
 </header>
 
 
 <section class="hero">
 
-<h2>Find Trusted Local Contractors</h2>
+<div class="hero-content">
 
-<p>
-Connecting Lehigh County residents and organizations
-with local contractors and service providers.
-</p>
+    <div class="eyebrow">
+        BUILD • MAINTAIN • REPAIR • TOGETHER
+    </div>
 
-<div class="search-box">
-<input
-    id="searchInput"
-    type="text"
-    placeholder="Search by business, service, owner, or location..."
-    onkeyup="searchContractors()"
->
+    <h1>Lehigh County Contractor Directory</h1>
+
+    <p class="hero-description">
+        Connecting the community with local contractors and service
+        providers throughout Lehigh County.
+    </p>
+
+    <div class="search">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by business name, service, location, or contact..."
+            oninput="applyFilters()"
+        >
+        <button onclick="applyFilters()">Search</button>
+    </div>
+
+    <div class="hero-benefits">
+
+        <div class="benefit">
+            <span class="benefit-icon">⌂</span>
+            Local Contractors
+        </div>
+
+        <div class="benefit">
+            <span class="benefit-icon">✓</span>
+            Local Services
+        </div>
+
+        <div class="benefit">
+            <span class="benefit-icon">⌖</span>
+            Lehigh County
+        </div>
+
+        <div class="benefit">
+            <span class="benefit-icon">↔</span>
+            Stronger Communities
+        </div>
+
+    </div>
+
 </div>
-
-</section>
-
-
-<section class="filters">
-
-<button class="filter-btn active" onclick="filterCards('all',this)">All</button>
-
-<button class="filter-btn" onclick="filterCards('construction',this)">
-Construction
-</button>
-
-<button class="filter-btn" onclick="filterCards('cleaning',this)">
-Cleaning
-</button>
-
-<button class="filter-btn" onclick="filterCards('electrical',this)">
-Electrical
-</button>
-
-<button class="filter-btn" onclick="filterCards('landscaping',this)">
-Landscaping
-</button>
-
-<button class="filter-btn" onclick="filterCards('demolition',this)">
-Demolition
-</button>
-
-<button class="filter-btn" onclick="filterCards('handyman',this)">
-Handyman
-</button>
 
 </section>
 
 
 <main class="directory" id="directory">
 
-<div class="directory-header">
-
-<h2>Contractor Directory</h2>
-
-<p id="resultCount">
-Browse businesses and service providers throughout Lehigh County.
-</p>
-
+<div class="directory-title">
+    <h2>Contractor Directory</h2>
+    <p>Search and browse participating contractors and service providers.</p>
 </div>
 
 
-<div class="grid" id="contractorGrid">
+<div class="directory-layout">
+
+<aside class="sidebar">
+
+    <h3>Filter by Service</h3>
+
+    <button class="filter active" data-filter="all" onclick="setFilter('all',this)">
+        All Contractors <span class="count">21</span>
+    </button>
+
+    <button class="filter" data-filter="cleaning" onclick="setFilter('cleaning',this)">
+        Cleaning
+    </button>
+
+    <button class="filter" data-filter="construction" onclick="setFilter('construction',this)">
+        Construction
+    </button>
+
+    <button class="filter" data-filter="demolition" onclick="setFilter('demolition',this)">
+        Demolition
+    </button>
+
+    <button class="filter" data-filter="electrical" onclick="setFilter('electrical',this)">
+        Electrical
+    </button>
+
+    <button class="filter" data-filter="landscaping" onclick="setFilter('landscaping',this)">
+        Landscaping
+    </button>
+
+    <button class="filter" data-filter="handyman" onclick="setFilter('handyman',this)">
+        Handyman
+    </button>
+
+    <button class="filter" data-filter="other" onclick="setFilter('other',this)">
+        Other / Not Listed
+    </button>
+
+    <hr>
+
+    <p class="sidebar-note">
+        Some contractor records do not yet include every business detail.
+        Only available information is displayed.
+    </p>
+
+</aside>
 
 
-<div class="card" data-category="cleaning">
+<section>
 
-<h3>Tuckermack LLC / TNS Cleaning Services</h3>
-
-<p class="owner">Local Service Provider</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
+<div class="listing-header">
+    <strong id="resultCount">Showing 21 contractors</strong>
 </div>
 
-<div class="tags">
-<span class="tag">Cleaning</span>
-<span class="tag">Property Services</span>
+<div class="cards" id="cards">
+
+
+<!-- 1 -->
+
+<article class="card" data-category="construction cleaning plumbing flooring maintenance">
+<div class="card-top">
+<h3>Tuckermack LLC <br>(also TNS Cleaning Services)</h3>
+<span class="category">Multi-Service</span>
 </div>
 
+<p class="owner">Tarrin Tucker &amp; Lawrence McKinnis</p>
+
+<div class="details">
+<div class="detail">📍 805 S 5th Street</div>
+<div class="detail">☎ <a href="tel:4848600264">484-860-0264</a></div>
+<div class="detail">✉ <a href="mailto:tarrintucker@gmail.com">tarrintucker@gmail.com</a></div>
 </div>
 
-
-<div class="card" data-category="cleaning">
-
-<h3>Delicate Cleaning</h3>
-
-<p class="owner">Local Service Provider</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
-</div>
-
-<div class="tags">
-<span class="tag">Cleaning</span>
-<span class="tag">Residential Services</span>
-<span class="tag">Commercial Services</span>
-</div>
-
-</div>
-
-
-<div class="card" data-category="cleaning">
-
-<h3>BCMS Bardon Cleaning &amp; Maintenance</h3>
-
-<p class="owner">Local Service Provider</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
-</div>
-
-<div class="tags">
-<span class="tag">Cleaning</span>
+<div class="services">
+<div class="services-label">Services</div>
 <span class="tag">Maintenance</span>
+<span class="tag">Cleaning</span>
+<span class="tag">Painting</span>
+<span class="tag">Flooring</span>
+<span class="tag">Plumbing</span>
+<span class="tag">Flat Roofing</span>
+<span class="tag">Light Concrete</span>
+<span class="tag">Deck Installation</span>
+</div>
+</article>
+
+
+<!-- 2 -->
+
+<article class="card" data-category="cleaning">
+<div class="card-top">
+<h3>Delicate Cleaning</h3>
+<span class="category">Cleaning</span>
 </div>
 
+<p class="owner">Sharae Tyler</p>
+
+<div class="details">
+<div class="detail">📍 1312 S 8th Street, Allentown, PA 18103</div>
+<div class="detail">☎ <a href="tel:6109056770">610-905-6770</a></div>
+<div class="detail">✉ <a href="mailto:delicatecleaningpa@gmail.com">delicatecleaningpa@gmail.com</a></div>
 </div>
 
+<div class="services">
+<div class="services-label">Services</div>
+<span class="tag">Janitorial</span>
+<span class="tag">Cleaning</span>
+</div>
+</article>
 
-<div class="card" data-category="electrical construction">
 
-<h3>Croscut Electrical &amp; General Contracting</h3>
+<!-- 3 -->
 
-<p class="owner">Local Contractor</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
+<article class="card" data-category="other">
+<div class="card-top">
+<h3>BCMS Bardon Cleaning &amp; Maintenance</h3>
+<span class="category">Service Provider</span>
 </div>
 
-<div class="tags">
-<span class="tag">Electrical</span>
-<span class="tag">General Contracting</span>
+<p class="owner">BB Bardon</p>
+
+<div class="details">
+<div class="detail">☎ <a href="tel:9085482715">908-548-2715</a></div>
+<div class="detail">✉ <a href="mailto:bcmsnj.net@gmail.com">bcmsnj.net@gmail.com</a></div>
 </div>
-
-</div>
-
-
-<div class="card" data-category="demolition construction">
-
-<h3>Elevation Demo LLC</h3>
-
-<p class="owner">Local Contractor</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
-</div>
-
-<div class="tags">
-<span class="tag">Demolition</span>
-<span class="tag">Construction</span>
-</div>
-
-</div>
+</article>
 
 
-<div class="card" data-category="construction">
+<!-- 4 -->
 
-<h3>Andrews A-Plus Construction LLC</h3>
-
-<p class="owner">Local Contractor</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
-</div>
-
-<div class="tags">
-<span class="tag">Construction</span>
-<span class="tag">General Contracting</span>
-</div>
-
-</div>
-
-
-<div class="card" data-category="landscaping">
-
-<h3>Evans Landscaping</h3>
-
-<p class="owner">Local Service Provider</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
-</div>
-
-<div class="tags">
-<span class="tag">Landscaping</span>
-<span class="tag">Outdoor Services</span>
-</div>
-
-</div>
-
-
-<div class="card" data-category="demolition">
-
-<h3>All Out Removal</h3>
-
-<p class="owner">Local Service Provider</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
-</div>
-
-<div class="tags">
-<span class="tag">Removal</span>
-<span class="tag">Property Services</span>
-</div>
-
-</div>
-
-
-<div class="card" data-category="construction">
-
-<h3>London Maddan Construction Group</h3>
-
-<p class="owner">Local Contractor</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
-</div>
-
-<div class="tags">
-<span class="tag">Construction</span>
-<span class="tag">Contracting</span>
-</div>
-
-</div>
-
-
-<div class="card" data-category="handyman construction">
-
-<h3>Built By Loyalty Handyman Services LLC</h3>
-
-<p class="owner">Local Service Provider</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
-</div>
-
-<div class="tags">
-<span class="tag">Handyman</span>
-<span class="tag">Property Services</span>
-<span class="tag">Construction</span>
-</div>
-
-</div>
-
-
-<div class="card" data-category="construction">
-
-<h3>S.R.P Construction</h3>
-
-<p class="owner">Local Contractor</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
-</div>
-
-<div class="tags">
-<span class="tag">Construction</span>
-<span class="tag">Contracting</span>
-</div>
-
-</div>
-
-
-<div class="card" data-category="landscaping">
-
-<h3>The Grass Cutters</h3>
-
-<p class="owner">Local Service Provider</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
-</div>
-
-<div class="tags">
-<span class="tag">Landscaping</span>
-<span class="tag">Lawn Care</span>
-</div>
-
-</div>
-
-
-<div class="card" data-category="handyman">
-
+<article class="card" data-category="cleaning construction">
+<div class="card-top">
 <h3>All In One Services</h3>
-
-<p class="owner">Local Service Provider</p>
-
-<div class="info">
-Lehigh County, Pennsylvania
+<span class="category">Multi-Service</span>
 </div>
 
-<div class="tags">
-<span class="tag">Property Services</span>
-<span class="tag">Multiple Services</span>
+<p class="owner">Marvin Byers</p>
+
+<div class="details">
+<div class="detail">📍 1119 Patricia Drive, Allentown, PA 18103</div>
+<div class="detail">☎ <a href="tel:4845545982">484-554-5982</a></div>
+<div class="detail">✉ <a href="mailto:marvindbyers@gmail.com">marvindbyers@gmail.com</a></div>
 </div>
+
+<div class="services">
+<div class="services-label">Services</div>
+<span class="tag">Cleaning Services</span>
+<span class="tag">Construction Services</span>
+<span class="tag">Residential General Contracting</span>
+<span class="tag">Commercial Contracting</span>
+</div>
+</article>
+
+
+<!-- 5 -->
+
+<article class="card" data-category="landscaping">
+<div class="card-top">
+<h3>The Grass Cutters</h3>
+<span class="category">Landscaping</span>
+</div>
+
+<p class="owner">Jose Matias &amp; Milka Vera</p>
+
+<div class="details">
+<div class="detail">📍 809 N. Plymouth St, Allentown, PA 18109</div>
+<div class="detail">☎ <a href="tel:4846497878">484-649-7878</a></div>
+<div class="detail">✉ <a href="mailto:vera_milka@yahoo.com">vera_milka@yahoo.com</a></div>
+<div class="detail">✉ <a href="mailto:jmatias7910@gmail.com">jmatias7910@gmail.com</a></div>
+</div>
+
+<div class="services">
+<div class="services-label">Services</div>
+<span class="tag">Landscaping</span>
+</div>
+</article>
+
+
+<!-- 6 -->
+
+<article class="card" data-category="demolition">
+<div class="card-top">
+<h3>Elevation Demo LLC</h3>
+<span class="category">Demolition</span>
+</div>
+
+<p class="owner">Hollis (Hancho) Williams</p>
+
+<div class="details">
+<div class="detail">📍 2854 Arcadia Avenue</div>
+<div class="detail">☎ <a href="tel:7177016341">717-701-6341</a></div>
+<div class="detail">✉ <a href="mailto:elevationdemollc@gmail.com">elevationdemollc@gmail.com</a></div>
+</div>
+
+<div class="services">
+<div class="services-label">Services</div>
+<span class="tag">Demolition</span>
+</div>
+</article>
+
+
+<!-- 7 -->
+
+<article class="card" data-category="construction electrical">
+<div class="card-top">
+<h3>Croscut Electrical &amp; General Contracting</h3>
+<span class="category">Contracting</span>
+</div>
+
+<p class="owner">Shakime (Cross) Riddick</p>
+
+<div class="details">
+<div class="detail">📍 3049 Fairview St, Bethlehem, PA</div>
+<div class="detail">☎ <a href="tel:4842808279">484-280-8279</a></div>
+<div class="detail">✉ <a href="mailto:croscutelectrical@gmail.com">croscutelectrical@gmail.com</a></div>
+</div>
+
+<div class="services">
+<div class="services-label">Services</div>
+<span class="tag">General Contracting</span>
+<span class="tag">Electrical Work</span>
+<span class="tag">Carpentry &amp; Framing</span>
+</div>
+</article>
+
+
+<!-- 8 -->
+
+<article class="card" data-category="construction">
+<div class="card-top">
+<h3>Andrews A-Plus Construction LLC</h3>
+<span class="category">Construction</span>
+</div>
+
+<p class="owner">Mike Andrews-Strickland</p>
+
+<div class="details">
+<div class="detail">☎ 484-387-4021 <small>(listed OOS)</small></div>
+<div class="detail">✉ <a href="mailto:mqs121961@gmail.com">mqs121961@gmail.com</a></div>
+</div>
+</article>
+
+
+<!-- 9 -->
+
+<article class="card" data-category="other">
+<div class="card-top">
+<div>
+<h3>Alexander McPherson</h3>
+<div class="business-missing">Business name not provided</div>
+</div>
+<span class="category">Service Provider</span>
+</div>
+
+<p class="owner">Alexander McPherson (Rock?)</p>
+
+<div class="details">
+<div class="detail">☎ <a href="tel:6105043682">610-504-3682</a></div>
+<div class="detail">✉ <a href="mailto:arocmcp@gmail.com">arocmcp@gmail.com</a></div>
+</div>
+</article>
+
+
+<!-- 10 -->
+
+<article class="card" data-category="other">
+<div class="card-top">
+<div>
+<h3>James Britt</h3>
+<div class="business-missing">Business name not provided</div>
+</div>
+<span class="category">Service Provider</span>
+</div>
+
+<p class="owner">James Britt</p>
+
+<div class="details">
+<div class="detail">✉ <a href="mailto:jabritt@ptd.net">jabritt@ptd.net</a></div>
+</div>
+</article>
+
+
+<!-- 11 -->
+
+<article class="card" data-category="landscaping">
+<div class="card-top">
+<h3>Evans Landscaping</h3>
+<span class="category">Landscaping</span>
+</div>
+
+<p class="owner">Anthony Evans</p>
+
+<div class="details">
+<div class="detail">📍 719 Saint John St</div>
+<div class="detail">☎ <a href="tel:4843408544">484-340-8544</a></div>
+<div class="detail">✉ <a href="mailto:evanslandscaping5@gmail.com">evanslandscaping5@gmail.com</a></div>
+</div>
+</article>
+
+
+<!-- 12 -->
+
+<article class="card" data-category="demolition other">
+<div class="card-top">
+<h3>All Out Removal</h3>
+<span class="category">Removal</span>
+</div>
+
+<p class="owner">Danny Duch</p>
+
+<div class="details">
+<div class="detail">☎ <a href="tel:6109696263">610-969-6263</a></div>
+<div class="detail">✉ <a href="mailto:alloutremoval@gmail.com">alloutremoval@gmail.com</a></div>
+</div>
+
+<div class="services">
+<div class="services-label">Services</div>
+<span class="tag">Junk Removal</span>
+<span class="tag">Demolition</span>
+<span class="tag">Relocations</span>
+</div>
+</article>
+
+
+<!-- 13 -->
+
+<article class="card" data-category="other">
+<div class="card-top">
+<div>
+<h3>Nevin Riddick</h3>
+<div class="business-missing">Business name not provided</div>
+</div>
+<span class="category">Service Provider</span>
+</div>
+
+<p class="owner">Nevin Riddick</p>
+
+<div class="details">
+<div class="detail">☎ <a href="tel:4842015239">484-201-5239</a></div>
+<div class="detail">✉ <a href="mailto:nevriddick@yahoo.com">nevriddick@yahoo.com</a></div>
+</div>
+</article>
+
+
+<!-- 14 -->
+
+<article class="card" data-category="cleaning">
+<div class="card-top">
+<h3>London Maddan Construction Group</h3>
+<span class="category">Cleaning</span>
+</div>
+
+<p class="owner">Stephanie Jane Tyler</p>
+
+<div class="details">
+<div class="detail">☎ <a href="tel:4845540275">484-554-0275</a></div>
+<div class="detail">✉ <a href="mailto:stephanie@londonmaddan.com">stephanie@londonmaddan.com</a></div>
+</div>
+
+<div class="services">
+<div class="services-label">Services Listed</div>
+<span class="tag">Cleaning Services</span>
+</div>
+</article>
+
+
+<!-- 15 -->
+
+<article class="card" data-category="handyman">
+<div class="card-top">
+<h3>Built By Loyalty Handyman Services LLC</h3>
+<span class="category">Handyman</span>
+</div>
+
+<p class="owner">Montreal Howard</p>
+
+<div class="details">
+<div class="detail">📍 2044 W. Fairmont St, Apt 6</div>
+<div class="detail">☎ <a href="tel:4846877793">484-687-7793</a></div>
+<div class="detail">✉ <a href="mailto:builtbyloyalty@gmail.com">builtbyloyalty@gmail.com</a></div>
+</div>
+</article>
+
+
+<!-- 16 -->
+
+<article class="card" data-category="construction">
+<div class="card-top">
+<h3>S.R.P Construction</h3>
+<span class="category">Construction</span>
+</div>
+
+<p class="owner">Santo Remigio</p>
+
+<div class="details">
+<div class="detail">📍 816 N Penn St</div>
+<div class="detail">☎ <a href="tel:4846204031">484-620-4031</a></div>
+<div class="detail">✉ <a href="mailto:srppa19@live.com">srppa19@live.com</a></div>
+</div>
+</article>
+
+
+<!-- 17 -->
+
+<article class="card" data-category="other">
+<div class="card-top">
+<h3>Tucker Mack LLC</h3>
+<span class="category">Service Provider</span>
+</div>
+
+<p class="owner">Lawrence J. McKinnis</p>
+
+<div class="details">
+<div class="detail">☎ <a href="tel:9737573630">973-757-3630</a></div>
+<div class="detail">✉ <a href="mailto:ljmckinnis@yahoo.com">ljmckinnis@yahoo.com</a></div>
+</div>
+</article>
+
+
+<!-- 18 -->
+
+<article class="card" data-category="other">
+<div class="card-top">
+<div>
+<h3>Dave Cruz</h3>
+<div class="business-missing">Business name not provided</div>
+</div>
+<span class="category">Service Provider</span>
+</div>
+
+<p class="owner">Dave Cruz</p>
+
+<div class="details">
+<div class="detail">📍 736 N 4th St</div>
+<div class="detail">☎ <a href="tel:4844254892">484-425-4892</a></div>
+<div class="detail">✉ <a href="mailto:davenyc7317@fmail.com">davenyc7317@fmail.com</a></div>
+</div>
+</article>
+
+
+<!-- 19 -->
+
+<article class="card" data-category="other">
+<div class="card-top">
+<div>
+<h3>Clarence Fuller</h3>
+<div class="business-missing">Business name not provided</div>
+</div>
+<span class="category">Service Provider</span>
+</div>
+
+<p class="owner">Clarence Fuller</p>
+
+<div class="details">
+<div class="detail">📍 498 Atlas Rd</div>
+<div class="detail">☎ <a href="tel:8352570115">835-257-0115</a></div>
+<div class="detail">✉ <a href="mailto:fullerclarence03@gmai.com">fullerclarence03@gmai.com</a></div>
+</div>
+</article>
+
+
+<!-- 20 -->
+
+<article class="card" data-category="cleaning">
+<div class="card-top">
+<h3>Strong Arm Cleaning LLC</h3>
+<span class="category">Cleaning</span>
+</div>
+
+<p class="owner">Ray Moody</p>
+
+<div class="details">
+<div class="detail">☎ <a href="tel:4849490271">484-949-0271</a></div>
+<div class="detail">✉ <a href="mailto:cleanarmstrong@gmail.com">cleanarmstrong@gmail.com</a></div>
+</div>
+</article>
+
+
+<!-- 21 -->
+
+<article class="card" data-category="other">
+<div class="card-top">
+<div>
+<h3>Paul Dallard</h3>
+<div class="business-missing">Business name not provided</div>
+</div>
+<span class="category">Service Provider</span>
+</div>
+
+<p class="owner">Paul Dallard</p>
+
+<div class="details">
+<div class="detail">☎ <a href="tel:4848660323">484-866-0323</a></div>
+<div class="detail">✉ <a href="mailto:pauldallard3@gmail.com">pauldallard3@gmail.com</a></div>
+</div>
+</article>
+
 
 </div>
 
+<div class="no-results" id="noResults">
+    No contractors matched your search.
+</div>
+
+</section>
 
 </div>
 
@@ -559,73 +1137,106 @@ Lehigh County, Pennsylvania
 
 <footer id="about">
 
-<h3>S3 Lehigh</h3>
+<div class="footer-inner">
 
+<div>
+<h3>S3 CONTRACTORS</h3>
 <p>
-Supporting local contractors, businesses and service providers
-throughout Lehigh County.
+LEHIGH COUNTY<br>
+Local Contractors. Stronger Communities.
 </p>
+</div>
 
-<p>© 2026 S3 Lehigh Contractor Directory</p>
+<div class="footer-links">
+<h4>Quick Links</h4>
+<a href="#">Home</a>
+<a href="#directory">Contractor Directory</a>
+<a href="#about">About</a>
+</div>
+
+<div>
+<h4>Our Mission</h4>
+<p>
+To support and connect participating contractors and service
+providers by providing an accessible directory for the
+Lehigh County community.
+</p>
+</div>
+
+</div>
+
+<div class="copyright">
+© 2026 S3 Contractors — Lehigh County
+</div>
 
 </footer>
 
 
 <script>
 
-function searchContractors() {
+let currentFilter = "all";
 
-    const input =
+function setFilter(filter, button){
+
+    currentFilter = filter;
+
+    document.querySelectorAll(".filter").forEach(btn=>{
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    applyFilters();
+}
+
+
+function applyFilters(){
+
+    const search =
         document.getElementById("searchInput")
-        .value.toLowerCase();
+        .value
+        .toLowerCase()
+        .trim();
 
     const cards =
         document.querySelectorAll(".card");
 
-    cards.forEach(card => {
+    let visible = 0;
+
+    cards.forEach(card=>{
 
         const text =
             card.innerText.toLowerCase();
 
-        card.style.display =
-            text.includes(input) ? "block" : "none";
+        const categories =
+            card.dataset.category.toLowerCase();
 
-    });
+        const searchMatch =
+            text.includes(search);
 
-}
+        const filterMatch =
+            currentFilter === "all" ||
+            categories.includes(currentFilter);
 
+        if(searchMatch && filterMatch){
 
-function filterCards(category,button) {
+            card.style.display = "flex";
+            visible++;
 
-    const cards =
-        document.querySelectorAll(".card");
+        }else{
 
-    const buttons =
-        document.querySelectorAll(".filter-btn");
+            card.style.display = "none";
 
-    buttons.forEach(btn =>
-        btn.classList.remove("active")
-    );
-
-    button.classList.add("active");
-
-    cards.forEach(card => {
-
-        if(category === "all") {
-            card.style.display = "block";
-            return;
         }
 
-        const categories =
-            card.dataset.category || "";
-
-        card.style.display =
-            categories.includes(category)
-            ? "block"
-            : "none";
-
     });
 
+    document.getElementById("resultCount").textContent =
+        "Showing " + visible +
+        (visible === 1 ? " contractor" : " contractors");
+
+    document.getElementById("noResults").style.display =
+        visible === 0 ? "block" : "none";
 }
 
 </script>
