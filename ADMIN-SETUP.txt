@@ -19,3 +19,8 @@ IMPORTANT
 - Public visitors can read contractors.
 - Authenticated users currently have management permissions because of the RLS policy you created.
 - If there are any Supabase Auth users besides the two intended admins, tighten the RLS policy to those specific accounts before relying on this for production.
+
+
+COUNT FIX
+Filter badges on the left now recalculate from the live Supabase contractor list.
+So adding/deleting contractors updates "All Contractors" and category totals automatically.

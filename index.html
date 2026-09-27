@@ -642,7 +642,7 @@ footer p{
     <h3>Filter by Service</h3>
 
     <button class="filter active" data-filter="all" onclick="setFilter('all',this)">
-        All Contractors <span class="count">21</span>
+        All Contractors <span class="count" id="count-all">21</span>
     </button>
 
     <button class="filter" data-filter="cleaning" onclick="setFilter('cleaning',this)">
@@ -1270,6 +1270,38 @@ function setFilter(filter, button){
     applyFilters();
 }
 
+
+function updateFilterCounts(){
+    const cards = [...document.querySelectorAll(".card")];
+    const counts = {
+        all: cards.length,
+        cleaning: 0,
+        construction: 0,
+        demolition: 0,
+        electrical: 0,
+        landscaping: 0,
+        handyman: 0,
+        other: 0
+    };
+
+    for(const card of cards){
+        const cats = String(card.dataset.category || "other")
+            .toLowerCase()
+            .split(/\s+/)
+            .filter(Boolean);
+        for(const cat of cats){
+            if(Object.prototype.hasOwnProperty.call(counts, cat)){
+                counts[cat]++;
+            }
+        }
+    }
+
+    for(const [key,value] of Object.entries(counts)){
+        const el = document.getElementById("count-" + key);
+        if(el) el.textContent = value;
+    }
+}
+
 function applyFilters(){
     const search =
         document.getElementById("searchInput")
@@ -1337,6 +1369,7 @@ async function loadDirectoryFromSupabase(){
 
     if(!window.S3_CONFIG || !window.supabase){
         note.textContent = "";
+        updateFilterCounts();
         applyFilters();
         return;
     }
@@ -1362,6 +1395,7 @@ async function loadDirectoryFromSupabase(){
             databaseInitialized = true;
             document.getElementById("cards").innerHTML =
                 contractors.map(renderContractorCard).join("");
+            updateFilterCounts();
             note.textContent = "";
         }else{
             // Before the one-time import is completed, keep the existing 21
@@ -1373,6 +1407,7 @@ async function loadDirectoryFromSupabase(){
     }catch(err){
         console.warn("Supabase directory load failed; using built-in directory.", err);
         note.textContent = "";
+        updateFilterCounts();
         applyFilters();
     }
 }
