@@ -537,6 +537,17 @@ footer p{
     }
 }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+
+<style>
+.directory-sync-note{
+    font-size:11px;
+    color:#7a8793;
+    margin-top:5px;
+}
+</style>
 </head>
 
 <body>
@@ -675,7 +686,7 @@ footer p{
 <section>
 
 <div class="listing-header">
-    <strong id="resultCount">Showing 21 contractors</strong>
+    <div><strong id="resultCount">Showing 21 contractors</strong><div class="directory-sync-note" id="directorySyncNote"></div></div>
 </div>
 
 <div class="cards" id="cards">
@@ -1220,12 +1231,35 @@ Lehigh County community.
 </footer>
 
 
-<script>
 
+<script>
 let currentFilter = "all";
+let databaseInitialized = false;
+
+const CATEGORY_LABELS = {
+    cleaning: "Cleaning",
+    construction: "Construction",
+    demolition: "Demolition",
+    electrical: "Electrical",
+    landscaping: "Landscaping",
+    handyman: "Handyman",
+    other: "Other / Not Listed"
+};
+
+function escapeHtml(value){
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+function telHref(phone){
+    return String(phone || "").replace(/[^\d+]/g,"");
+}
 
 function setFilter(filter, button){
-
     currentFilter = filter;
 
     document.querySelectorAll(".filter").forEach(btn=>{
@@ -1233,50 +1267,33 @@ function setFilter(filter, button){
     });
 
     button.classList.add("active");
-
     applyFilters();
 }
 
-
 function applyFilters(){
-
     const search =
         document.getElementById("searchInput")
         .value
         .toLowerCase()
         .trim();
 
-    const cards =
-        document.querySelectorAll(".card");
-
+    const cards = document.querySelectorAll(".card");
     let visible = 0;
 
     cards.forEach(card=>{
-
-        const text =
-            card.innerText.toLowerCase();
-
-        const categories =
-            card.dataset.category.toLowerCase();
-
-        const searchMatch =
-            text.includes(search);
-
+        const text = card.innerText.toLowerCase();
+        const categories = (card.dataset.category || "other").toLowerCase();
+        const searchMatch = text.includes(search);
         const filterMatch =
             currentFilter === "all" ||
             categories.includes(currentFilter);
 
         if(searchMatch && filterMatch){
-
             card.style.display = "flex";
             visible++;
-
         }else{
-
             card.style.display = "none";
-
         }
-
     });
 
     document.getElementById("resultCount").textContent =
@@ -1287,7 +1304,80 @@ function applyFilters(){
         visible === 0 ? "block" : "none";
 }
 
-</script>
+function renderContractorCard(row){
+    const category = row.category || "other";
+    const label = CATEGORY_LABELS[category] || category;
+    const details = [];
 
+    if(row.address){
+        details.push(`<div class="detail">📍 ${escapeHtml(row.address)}</div>`);
+    }
+    if(row.phone){
+        details.push(`<div class="detail">☎ <a href="tel:${escapeHtml(telHref(row.phone))}">${escapeHtml(row.phone)}</a></div>`);
+    }
+    if(row.email){
+        const emails = String(row.email).split(",").map(x=>x.trim()).filter(Boolean);
+        for(const email of emails){
+            details.push(`<div class="detail">✉ <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></div>`);
+        }
+    }
+
+    return `
+    <article class="card" data-category="${escapeHtml(category)}">
+        <div class="card-top">
+            <h3>${escapeHtml(row.name)}</h3>
+            <span class="category">${escapeHtml(label)}</span>
+        </div>
+        <div class="details">${details.join("")}</div>
+    </article>`;
+}
+
+async function loadDirectoryFromSupabase(){
+    const note = document.getElementById("directorySyncNote");
+
+    if(!window.S3_CONFIG || !window.supabase){
+        note.textContent = "";
+        applyFilters();
+        return;
+    }
+
+    try{
+        const client = window.supabase.createClient(
+            window.S3_CONFIG.SUPABASE_URL,
+            window.S3_CONFIG.SUPABASE_PUBLISHABLE_KEY
+        );
+
+        const { data, error } = await client
+            .from("Contractors")
+            .select("id,name,address,phone,email,category")
+            .order("name", { ascending:true });
+
+        if(error) throw error;
+
+        const rows = (data || []);
+        const marker = rows.find(r => r.name === "__S3_INITIALIZED__");
+        const contractors = rows.filter(r => r.name !== "__S3_INITIALIZED__");
+
+        if(marker){
+            databaseInitialized = true;
+            document.getElementById("cards").innerHTML =
+                contractors.map(renderContractorCard).join("");
+            note.textContent = "";
+        }else{
+            // Before the one-time import is completed, keep the existing 21
+            // hard-coded cards visible so the public directory never goes blank.
+            note.textContent = "";
+        }
+
+        applyFilters();
+    }catch(err){
+        console.warn("Supabase directory load failed; using built-in directory.", err);
+        note.textContent = "";
+        applyFilters();
+    }
+}
+
+document.addEventListener("DOMContentLoaded", loadDirectoryFromSupabase);
+</script>
 </body>
 </html>

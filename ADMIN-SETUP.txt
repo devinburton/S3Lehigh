@@ -1,0 +1,21 @@
+S3 LEHIGH ADMIN BUILD
+
+Private admin URL after deployment:
+https://s3lehigh.com/admin/
+
+Supabase project:
+https://nabzzfvdnrsqxtvrwtbz.supabase.co
+
+WHAT TO DO AFTER DEPLOYING
+1. Open https://s3lehigh.com/admin/
+2. Sign in with one of the Supabase users you already created.
+3. The first time only, click "Import current 21 contractors".
+4. After import, the public directory will read from Supabase.
+5. Use Add / Edit / Delete from the admin page going forward.
+
+IMPORTANT
+- There is NO admin link on the public site.
+- The browser uses only the Supabase publishable key, not a secret/service_role key.
+- Public visitors can read contractors.
+- Authenticated users currently have management permissions because of the RLS policy you created.
+- If there are any Supabase Auth users besides the two intended admins, tighten the RLS policy to those specific accounts before relying on this for production.
