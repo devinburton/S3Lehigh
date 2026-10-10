@@ -1,5 +1,5 @@
 -- Run in Supabase SQL Editor BEFORE deploying the member signup pages.
--- Replace the email below with an EXISTING Supabase Auth administrator account.
+-- Administrator website login: info@lvbnn.com (must exist in Supabase Auth).
 -- Add a second verified administrator email to the array if needed.
 begin;
 create table if not exists public.directory_members (
@@ -41,7 +41,7 @@ for each row execute function public.directory_create_request();
 insert into public.directory_members(user_id,email)
 select id,coalesce(email,'') from auth.users on conflict (user_id) do nothing;
 do $$
-declare admin_emails text[] := array['REPLACE_WITH_EXISTING_ADMIN_EMAIL'];
+declare admin_emails text[] := array['info@lvbnn.com'];
 begin
   if exists (select 1 from unnest(admin_emails) e where e like 'REPLACE_%') then
     raise exception 'Replace the administrator email before running. No changes committed.';
