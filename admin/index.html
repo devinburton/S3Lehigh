@@ -67,14 +67,12 @@ button{border:0;border-radius:7px;padding:11px 15px;font-weight:700;cursor:point
     <button class="secondary" id="logoutBtn">Sign out</button>
   </div>
 
-  <div id="seedBox" class="panel hidden">
-    <div class="notice">
-      Your Supabase contractor table is empty. Click once below to import the 21 contractors from the current S3Lehigh directory. After that, the public site will be managed from this dashboard.
-    </div>
-    <button class="primary" id="seedBtn">Import current 21 contractors</button>
-    <div id="seedMsg" class="msg"></div>
+  <div class="panel" id="membersPanel">
+    <h2 style="margin-top:0;color:var(--navy)">Member access requests</h2>
+    <p class="sub">Approve requests to grant directory access, or revoke existing access. Administrator roles are managed separately.</p>
+    <button id="refreshMembers" class="secondary">Refresh requests</button>
+    <div id="membersMessage" class="msg" role="status"></div><div id="membersList"></div>
   </div>
-
   <div class="panel">
     <h2 id="formTitle" style="margin-top:0;color:var(--navy)">Add Contractor</h2>
     <form id="contractorForm">
@@ -131,14 +129,6 @@ button{border:0;border-radius:7px;padding:11px 15px;font-weight:700;cursor:point
 </div>
 
 <script>
-const SEED = [{"name": "Tuckermack LLC (also TNS Cleaning Services)", "address": "805 S 5th Street", "phone": "484-860-0264", "email": "tarrintucker@gmail.com", "category": "construction"}, {"name": "Delicate Cleaning", "address": "1312 S 8th Street, Allentown, PA 18103", "phone": "610-905-6770", "email": "delicatecleaningpa@gmail.com", "category": "cleaning"}, {"name": "BCMS Bardon Cleaning & Maintenance", "address": "", "phone": "908-548-2715", "email": "bcmsnj.net@gmail.com", "category": "other"}, {"name": "All In One Services", "address": "1119 Patricia Drive, Allentown, PA 18103", "phone": "484-554-5982", "email": "marvindbyers@gmail.com", "category": "construction"}, {"name": "The Grass Cutters", "address": "809 N. Plymouth St, Allentown, PA 18109", "phone": "484-649-7878", "email": "vera_milka@yahoo.com, jmatias7910@gmail.com", "category": "landscaping"}, {"name": "Elevation Demo LLC", "address": "2854 Arcadia Avenue", "phone": "717-701-6341", "email": "elevationdemollc@gmail.com", "category": "demolition"}, {"name": "Croscut Electrical & General Contracting", "address": "3049 Fairview St, Bethlehem, PA", "phone": "484-280-8279", "email": "croscutelectrical@gmail.com", "category": "electrical"}, {"name": "Andrews A-Plus Construction LLC", "address": "", "phone": "484-387-4021", "email": "mqs121961@gmail.com", "category": "construction"}, {"name": "Alexander McPherson", "address": "", "phone": "610-504-3682", "email": "arocmcp@gmail.com", "category": "other"}, {"name": "James Britt", "address": "", "phone": "", "email": "jabritt@ptd.net", "category": "other"}, {"name": "Evans Landscaping", "address": "719 Saint John St", "phone": "484-340-8544", "email": "evanslandscaping5@gmail.com", "category": "landscaping"}, {"name": "All Out Removal", "address": "", "phone": "610-969-6263", "email": "alloutremoval@gmail.com", "category": "other"}, {"name": "Nevin Riddick", "address": "", "phone": "484-201-5239", "email": "nevriddick@yahoo.com", "category": "other"}, {"name": "London Maddan Construction Group", "address": "", "phone": "484-554-0275", "email": "stephanie@londonmaddan.com", "category": "cleaning"}, {"name": "Built By Loyalty Handyman Services LLC", "address": "2044 W. Fairmont St, Apt 6", "phone": "484-687-7793", "email": "builtbyloyalty@gmail.com", "category": "handyman"}, {"name": "S.R.P Construction", "address": "816 N Penn St", "phone": "484-620-4031", "email": "srppa19@live.com", "category": "construction"}, {"name": "Tucker Mack LLC", "address": "", "phone": "973-757-3630", "email": "ljmckinnis@yahoo.com", "category": "other"}, {"name": "Dave Cruz", "address": "736 N 4th St", "phone": "484-425-4892", "email": "davenyc7317@fmail.com", "category": "other"}, {"name": "Clarence Fuller", "address": "498 Atlas Rd", "phone": "835-257-0115", "email": "fullerclarence03@gmai.com", "category": "other"}, {"name": "Strong Arm Cleaning LLC", "address": "", "phone": "484-949-0271", "email": "cleanarmstrong@gmail.com", "category": "cleaning"}, {"name": "Paul Dallard", "address": "", "phone": "484-866-0323", "email": "pauldallard3@gmail.com", "category": "other"}];
-const MARKER = {
-  name:"__S3_INITIALIZED__",
-  address:"",
-  phone:"",
-  email:"",
-  category:"other"
-};
 
 const client = window.supabase.createClient(
   window.S3_CONFIG.SUPABASE_URL,
@@ -174,20 +164,33 @@ function labelCategory(c){
   }[c] || c || "Other";
 }
 
+let adminGeneration = 0;
 async function refreshSession(){
+  const generation = ++adminGeneration;
+  $("app").classList.add("hidden");
+  $("contractorList").replaceChildren();
+  $("membersList").replaceChildren();
   const { data } = await client.auth.getSession();
   const session = data?.session;
 
+  if(generation !== adminGeneration) return;
   if(!session){
     $("loginPanel").classList.remove("hidden");
     $("app").classList.add("hidden");
     return;
   }
 
+  const membership = await client.from("directory_members").select("role,status").eq("user_id",session.user.id).maybeSingle();
+  if(generation !== adminGeneration) return;
+  if(membership.error || membership.data?.role !== "admin" || membership.data?.status !== "approved"){
+    $("loginPanel").classList.remove("hidden");
+    setMessage($("loginMsg"),"An approved administrator account is required.","error");
+    return;
+  }
   $("loginPanel").classList.add("hidden");
   $("app").classList.remove("hidden");
   $("signedInAs").textContent = "Signed in as " + session.user.email;
-  await loadContractors();
+  await Promise.all([loadContractors(),loadMembers()]);
 }
 
 async function loadContractors(){
@@ -202,10 +205,10 @@ async function loadContractors(){
   }
 
   const rows = data || [];
-  const initialized = rows.some(r => r.name === "__S3_INITIALIZED__");
+
   const contractors = rows.filter(r => r.name !== "__S3_INITIALIZED__");
 
-  $("seedBox").classList.toggle("hidden", initialized || contractors.length > 0);
+
   $("countText").textContent = contractors.length + (contractors.length === 1 ? " contractor" : " contractors");
 
   if(!contractors.length){
@@ -225,11 +228,12 @@ async function loadContractors(){
         </div>
       </div>
       <div class="actions">
-        <button class="secondary" onclick='editContractor(${JSON.stringify(r)})'>Edit</button>
+        <button class="secondary" data-edit="${escapeHtml(r.id)}">Edit</button>
         <button class="danger" onclick="deleteContractor(${Number(r.id)})">Delete</button>
       </div>
     </div>
   `).join("");
+  $("contractorList").querySelectorAll("[data-edit]").forEach(button=>button.addEventListener("click",()=>editContractor(contractors.find(r=>String(r.id)===button.dataset.edit))));
 }
 
 window.editContractor = function(r){
@@ -314,40 +318,23 @@ $("contractorForm").addEventListener("submit", async e=>{
   await loadContractors();
 });
 
-$("seedBtn").addEventListener("click", async ()=>{
-  if(!confirm("Import the 21 current directory contractors into Supabase?")) return;
-
-  $("seedBtn").disabled = true;
-  setMessage($("seedMsg"), "Importing...");
-
-  const { data: existing, error: readError } = await client
-    .from("Contractors")
-    .select("id,name");
-
-  if(readError){
-    setMessage($("seedMsg"), readError.message, "error");
-    $("seedBtn").disabled = false;
-    return;
-  }
-
-  if((existing || []).length){
-    setMessage($("seedMsg"), "The database already contains records, so nothing was imported.", "error");
-    $("seedBtn").disabled = false;
-    return;
-  }
-
-  const { error } = await client.from("Contractors").insert([MARKER, ...SEED]);
-
-  if(error){
-    setMessage($("seedMsg"), error.message, "error");
-    $("seedBtn").disabled = false;
-    return;
-  }
-
-  setMessage($("seedMsg"), "Import complete.", "success");
-  await loadContractors();
-});
-
+async function loadMembers(){
+  const {data,error}=await client.from("directory_members").select("user_id,email,full_name,organization,status,role,created_at").order("created_at",{ascending:false});
+  if(error){setMessage($("membersMessage"),"Unable to load requests: "+error.message,"error");return;}
+  const members=(data||[]).filter(m=>m.role!=="admin");
+  $("membersList").innerHTML=members.map(m=>`<div class="contractor"><div><strong>${escapeHtml(m.full_name||m.email)}</strong><div class="meta">${escapeHtml(m.email)}<br>${escapeHtml(m.organization)}</div><span class="badge">${escapeHtml(m.status)}</span></div><div class="actions">${m.status!=="approved" ? `<button class="primary" data-user="${escapeHtml(m.user_id)}" data-status="approved">Approve</button>` : ""}${m.status!=="revoked" ? `<button class="danger" data-user="${escapeHtml(m.user_id)}" data-status="revoked">Revoke</button>` : ""}</div></div>`).join("") || '<p class="sub">No member requests yet.</p>';
+  $("membersList").querySelectorAll("[data-user]").forEach(button=>button.addEventListener("click",async()=>{
+    button.disabled=true;
+    try{
+      const {data,error}=await client.from("directory_members").update({status:button.dataset.status}).eq("user_id",button.dataset.user).select("user_id");
+      if(error || !data?.length) throw error || new Error("Access was not changed. Check your administrator permissions.");
+      setMessage($("membersMessage"),button.dataset.status==="approved" ? "Member approved." : "Member access revoked.","success");
+      await loadMembers();
+    }catch(error){setMessage($("membersMessage"),error.message,"error");button.disabled=false;}
+  }));
+}
+$("refreshMembers").addEventListener("click",loadMembers);
+client.auth.onAuthStateChange(()=>{++adminGeneration;$("app").classList.add("hidden");$("contractorList").replaceChildren();$("membersList").replaceChildren();setTimeout(refreshSession,0);});
 refreshSession();
 </script>
 </body>

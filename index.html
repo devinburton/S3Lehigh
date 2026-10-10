@@ -548,6 +548,10 @@ footer p{
     margin-top:5px;
 }
 </style>
+<style>
+.hidden{display:none!important}.access-panel{max-width:560px;margin:36px auto;padding:28px;background:white;border:1px solid var(--border);border-radius:12px}.access-panel h2{color:var(--navy);margin-bottom:12px}.access-panel p{line-height:1.6;margin-bottom:18px}.access-panel label{display:block;margin:14px 0 6px;font-weight:bold;font-size:13px}.access-panel input{width:100%;padding:12px;border:1px solid var(--border);border-radius:6px}.access-panel button,.member-actions button{padding:12px 18px;border:0;border-radius:6px;background:var(--navy);color:white;cursor:pointer;margin:12px 8px 0 0}.access-panel button.secondary{background:var(--light-blue);color:var(--navy)}.member-actions{padding:14px 6%;text-align:right}#accessMessage{margin-top:16px;line-height:1.6}button:disabled{opacity:.6;cursor:wait}
+</style>
+<meta name="robots" content="noindex,nofollow">
 </head>
 
 <body>
@@ -588,7 +592,7 @@ footer p{
         providers throughout Lehigh County.
     </p>
 
-    <div class="search">
+    <div class="search hidden" id="memberSearch">
         <input
             type="text"
             id="searchInput"
@@ -627,7 +631,20 @@ footer p{
 </section>
 
 
-<main class="directory" id="directory">
+<section class="access-panel" id="accessPanel" aria-labelledby="accessTitle">
+<h2 id="accessTitle">Member access</h2>
+<p>Sign in to browse the contractor directory. New accounts require approval before directory access is granted.</p>
+<form id="accessForm">
+<div id="signupDetails" class="hidden"><label for="fullName">Full name</label><input id="fullName" maxlength="200" autocomplete="name"><label for="organization">Organization</label><input id="organization" maxlength="200" autocomplete="organization"></div>
+<label for="memberEmail">Email</label><input id="memberEmail" type="email" required autocomplete="username">
+<label for="memberPassword">Password</label><input id="memberPassword" type="password" required autocomplete="current-password">
+<button id="accessSubmit" type="submit">Sign in</button><button id="toggleSignup" type="button" class="secondary">Request access</button>
+</form><p id="accessMessage" role="status" aria-live="polite"></p>
+<button id="gateLogout" type="button" class="hidden">Sign out</button>
+</section>
+<div class="member-actions hidden" id="memberActions"><span id="memberIdentity"></span> <button id="memberLogout">Sign out</button></div>
+
+<main class="directory hidden" id="directory">
 
 <div class="directory-title">
     <h2>Contractor Directory</h2>
@@ -642,7 +659,7 @@ footer p{
     <h3>Filter by Service</h3>
 
     <button class="filter active" data-filter="all" onclick="setFilter('all',this)">
-        All Contractors <span class="count" id="count-all">21</span>
+        All Contractors <span class="count" id="count-all">0</span>
     </button>
 
     <button class="filter" data-filter="cleaning" onclick="setFilter('cleaning',this)">
@@ -686,453 +703,10 @@ footer p{
 <section>
 
 <div class="listing-header">
-    <div><strong id="resultCount">Showing 21 contractors</strong><div class="directory-sync-note" id="directorySyncNote"></div></div>
+    <div><strong id="resultCount"></strong><div class="directory-sync-note" id="directorySyncNote"></div></div>
 </div>
 
 <div class="cards" id="cards">
-
-
-<!-- 1 -->
-
-<article class="card" data-category="construction cleaning plumbing flooring maintenance">
-<div class="card-top">
-<h3>Tuckermack LLC <br>(also TNS Cleaning Services)</h3>
-<span class="category">Multi-Service</span>
-</div>
-
-<p class="owner">Tarrin Tucker &amp; Lawrence McKinnis</p>
-
-<div class="details">
-<div class="detail">📍 805 S 5th Street</div>
-<div class="detail">☎ <a href="tel:4848600264">484-860-0264</a></div>
-<div class="detail">✉ <a href="mailto:tarrintucker@gmail.com">tarrintucker@gmail.com</a></div>
-</div>
-
-<div class="services">
-<div class="services-label">Services</div>
-<span class="tag">Maintenance</span>
-<span class="tag">Cleaning</span>
-<span class="tag">Painting</span>
-<span class="tag">Flooring</span>
-<span class="tag">Plumbing</span>
-<span class="tag">Flat Roofing</span>
-<span class="tag">Light Concrete</span>
-<span class="tag">Deck Installation</span>
-</div>
-</article>
-
-
-<!-- 2 -->
-
-<article class="card" data-category="cleaning">
-<div class="card-top">
-<h3>Delicate Cleaning</h3>
-<span class="category">Cleaning</span>
-</div>
-
-<p class="owner">Sharae Tyler</p>
-
-<div class="details">
-<div class="detail">📍 1312 S 8th Street, Allentown, PA 18103</div>
-<div class="detail">☎ <a href="tel:6109056770">610-905-6770</a></div>
-<div class="detail">✉ <a href="mailto:delicatecleaningpa@gmail.com">delicatecleaningpa@gmail.com</a></div>
-</div>
-
-<div class="services">
-<div class="services-label">Services</div>
-<span class="tag">Janitorial</span>
-<span class="tag">Cleaning</span>
-</div>
-</article>
-
-
-<!-- 3 -->
-
-<article class="card" data-category="other">
-<div class="card-top">
-<h3>BCMS Bardon Cleaning &amp; Maintenance</h3>
-<span class="category">Service Provider</span>
-</div>
-
-<p class="owner">BB Bardon</p>
-
-<div class="details">
-<div class="detail">☎ <a href="tel:9085482715">908-548-2715</a></div>
-<div class="detail">✉ <a href="mailto:bcmsnj.net@gmail.com">bcmsnj.net@gmail.com</a></div>
-</div>
-</article>
-
-
-<!-- 4 -->
-
-<article class="card" data-category="cleaning construction">
-<div class="card-top">
-<h3>All In One Services</h3>
-<span class="category">Multi-Service</span>
-</div>
-
-<p class="owner">Marvin Byers</p>
-
-<div class="details">
-<div class="detail">📍 1119 Patricia Drive, Allentown, PA 18103</div>
-<div class="detail">☎ <a href="tel:4845545982">484-554-5982</a></div>
-<div class="detail">✉ <a href="mailto:marvindbyers@gmail.com">marvindbyers@gmail.com</a></div>
-</div>
-
-<div class="services">
-<div class="services-label">Services</div>
-<span class="tag">Cleaning Services</span>
-<span class="tag">Construction Services</span>
-<span class="tag">Residential General Contracting</span>
-<span class="tag">Commercial Contracting</span>
-</div>
-</article>
-
-
-<!-- 5 -->
-
-<article class="card" data-category="landscaping">
-<div class="card-top">
-<h3>The Grass Cutters</h3>
-<span class="category">Landscaping</span>
-</div>
-
-<p class="owner">Jose Matias &amp; Milka Vera</p>
-
-<div class="details">
-<div class="detail">📍 809 N. Plymouth St, Allentown, PA 18109</div>
-<div class="detail">☎ <a href="tel:4846497878">484-649-7878</a></div>
-<div class="detail">✉ <a href="mailto:vera_milka@yahoo.com">vera_milka@yahoo.com</a></div>
-<div class="detail">✉ <a href="mailto:jmatias7910@gmail.com">jmatias7910@gmail.com</a></div>
-</div>
-
-<div class="services">
-<div class="services-label">Services</div>
-<span class="tag">Landscaping</span>
-</div>
-</article>
-
-
-<!-- 6 -->
-
-<article class="card" data-category="demolition">
-<div class="card-top">
-<h3>Elevation Demo LLC</h3>
-<span class="category">Demolition</span>
-</div>
-
-<p class="owner">Hollis (Hancho) Williams</p>
-
-<div class="details">
-<div class="detail">📍 2854 Arcadia Avenue</div>
-<div class="detail">☎ <a href="tel:7177016341">717-701-6341</a></div>
-<div class="detail">✉ <a href="mailto:elevationdemollc@gmail.com">elevationdemollc@gmail.com</a></div>
-</div>
-
-<div class="services">
-<div class="services-label">Services</div>
-<span class="tag">Demolition</span>
-</div>
-</article>
-
-
-<!-- 7 -->
-
-<article class="card" data-category="construction electrical">
-<div class="card-top">
-<h3>Croscut Electrical &amp; General Contracting</h3>
-<span class="category">Contracting</span>
-</div>
-
-<p class="owner">Shakime (Cross) Riddick</p>
-
-<div class="details">
-<div class="detail">📍 3049 Fairview St, Bethlehem, PA</div>
-<div class="detail">☎ <a href="tel:4842808279">484-280-8279</a></div>
-<div class="detail">✉ <a href="mailto:croscutelectrical@gmail.com">croscutelectrical@gmail.com</a></div>
-</div>
-
-<div class="services">
-<div class="services-label">Services</div>
-<span class="tag">General Contracting</span>
-<span class="tag">Electrical Work</span>
-<span class="tag">Carpentry &amp; Framing</span>
-</div>
-</article>
-
-
-<!-- 8 -->
-
-<article class="card" data-category="construction">
-<div class="card-top">
-<h3>Andrews A-Plus Construction LLC</h3>
-<span class="category">Construction</span>
-</div>
-
-<p class="owner">Mike Andrews-Strickland</p>
-
-<div class="details">
-<div class="detail">☎ 484-387-4021 <small>(listed OOS)</small></div>
-<div class="detail">✉ <a href="mailto:mqs121961@gmail.com">mqs121961@gmail.com</a></div>
-</div>
-</article>
-
-
-<!-- 9 -->
-
-<article class="card" data-category="other">
-<div class="card-top">
-<div>
-<h3>Alexander McPherson</h3>
-<div class="business-missing">Business name not provided</div>
-</div>
-<span class="category">Service Provider</span>
-</div>
-
-<p class="owner">Alexander McPherson (Rock?)</p>
-
-<div class="details">
-<div class="detail">☎ <a href="tel:6105043682">610-504-3682</a></div>
-<div class="detail">✉ <a href="mailto:arocmcp@gmail.com">arocmcp@gmail.com</a></div>
-</div>
-</article>
-
-
-<!-- 10 -->
-
-<article class="card" data-category="other">
-<div class="card-top">
-<div>
-<h3>James Britt</h3>
-<div class="business-missing">Business name not provided</div>
-</div>
-<span class="category">Service Provider</span>
-</div>
-
-<p class="owner">James Britt</p>
-
-<div class="details">
-<div class="detail">✉ <a href="mailto:jabritt@ptd.net">jabritt@ptd.net</a></div>
-</div>
-</article>
-
-
-<!-- 11 -->
-
-<article class="card" data-category="landscaping">
-<div class="card-top">
-<h3>Evans Landscaping</h3>
-<span class="category">Landscaping</span>
-</div>
-
-<p class="owner">Anthony Evans</p>
-
-<div class="details">
-<div class="detail">📍 719 Saint John St</div>
-<div class="detail">☎ <a href="tel:4843408544">484-340-8544</a></div>
-<div class="detail">✉ <a href="mailto:evanslandscaping5@gmail.com">evanslandscaping5@gmail.com</a></div>
-</div>
-</article>
-
-
-<!-- 12 -->
-
-<article class="card" data-category="demolition other">
-<div class="card-top">
-<h3>All Out Removal</h3>
-<span class="category">Removal</span>
-</div>
-
-<p class="owner">Danny Duch</p>
-
-<div class="details">
-<div class="detail">☎ <a href="tel:6109696263">610-969-6263</a></div>
-<div class="detail">✉ <a href="mailto:alloutremoval@gmail.com">alloutremoval@gmail.com</a></div>
-</div>
-
-<div class="services">
-<div class="services-label">Services</div>
-<span class="tag">Junk Removal</span>
-<span class="tag">Demolition</span>
-<span class="tag">Relocations</span>
-</div>
-</article>
-
-
-<!-- 13 -->
-
-<article class="card" data-category="other">
-<div class="card-top">
-<div>
-<h3>Nevin Riddick</h3>
-<div class="business-missing">Business name not provided</div>
-</div>
-<span class="category">Service Provider</span>
-</div>
-
-<p class="owner">Nevin Riddick</p>
-
-<div class="details">
-<div class="detail">☎ <a href="tel:4842015239">484-201-5239</a></div>
-<div class="detail">✉ <a href="mailto:nevriddick@yahoo.com">nevriddick@yahoo.com</a></div>
-</div>
-</article>
-
-
-<!-- 14 -->
-
-<article class="card" data-category="cleaning">
-<div class="card-top">
-<h3>London Maddan Construction Group</h3>
-<span class="category">Cleaning</span>
-</div>
-
-<p class="owner">Stephanie Jane Tyler</p>
-
-<div class="details">
-<div class="detail">☎ <a href="tel:4845540275">484-554-0275</a></div>
-<div class="detail">✉ <a href="mailto:stephanie@londonmaddan.com">stephanie@londonmaddan.com</a></div>
-</div>
-
-<div class="services">
-<div class="services-label">Services Listed</div>
-<span class="tag">Cleaning Services</span>
-</div>
-</article>
-
-
-<!-- 15 -->
-
-<article class="card" data-category="handyman">
-<div class="card-top">
-<h3>Built By Loyalty Handyman Services LLC</h3>
-<span class="category">Handyman</span>
-</div>
-
-<p class="owner">Montreal Howard</p>
-
-<div class="details">
-<div class="detail">📍 2044 W. Fairmont St, Apt 6</div>
-<div class="detail">☎ <a href="tel:4846877793">484-687-7793</a></div>
-<div class="detail">✉ <a href="mailto:builtbyloyalty@gmail.com">builtbyloyalty@gmail.com</a></div>
-</div>
-</article>
-
-
-<!-- 16 -->
-
-<article class="card" data-category="construction">
-<div class="card-top">
-<h3>S.R.P Construction</h3>
-<span class="category">Construction</span>
-</div>
-
-<p class="owner">Santo Remigio</p>
-
-<div class="details">
-<div class="detail">📍 816 N Penn St</div>
-<div class="detail">☎ <a href="tel:4846204031">484-620-4031</a></div>
-<div class="detail">✉ <a href="mailto:srppa19@live.com">srppa19@live.com</a></div>
-</div>
-</article>
-
-
-<!-- 17 -->
-
-<article class="card" data-category="other">
-<div class="card-top">
-<h3>Tucker Mack LLC</h3>
-<span class="category">Service Provider</span>
-</div>
-
-<p class="owner">Lawrence J. McKinnis</p>
-
-<div class="details">
-<div class="detail">☎ <a href="tel:9737573630">973-757-3630</a></div>
-<div class="detail">✉ <a href="mailto:ljmckinnis@yahoo.com">ljmckinnis@yahoo.com</a></div>
-</div>
-</article>
-
-
-<!-- 18 -->
-
-<article class="card" data-category="other">
-<div class="card-top">
-<div>
-<h3>Dave Cruz</h3>
-<div class="business-missing">Business name not provided</div>
-</div>
-<span class="category">Service Provider</span>
-</div>
-
-<p class="owner">Dave Cruz</p>
-
-<div class="details">
-<div class="detail">📍 736 N 4th St</div>
-<div class="detail">☎ <a href="tel:4844254892">484-425-4892</a></div>
-<div class="detail">✉ <a href="mailto:davenyc7317@fmail.com">davenyc7317@fmail.com</a></div>
-</div>
-</article>
-
-
-<!-- 19 -->
-
-<article class="card" data-category="other">
-<div class="card-top">
-<div>
-<h3>Clarence Fuller</h3>
-<div class="business-missing">Business name not provided</div>
-</div>
-<span class="category">Service Provider</span>
-</div>
-
-<p class="owner">Clarence Fuller</p>
-
-<div class="details">
-<div class="detail">📍 498 Atlas Rd</div>
-<div class="detail">☎ <a href="tel:8352570115">835-257-0115</a></div>
-<div class="detail">✉ <a href="mailto:fullerclarence03@gmai.com">fullerclarence03@gmai.com</a></div>
-</div>
-</article>
-
-
-<!-- 20 -->
-
-<article class="card" data-category="cleaning">
-<div class="card-top">
-<h3>Strong Arm Cleaning LLC</h3>
-<span class="category">Cleaning</span>
-</div>
-
-<p class="owner">Ray Moody</p>
-
-<div class="details">
-<div class="detail">☎ <a href="tel:4849490271">484-949-0271</a></div>
-<div class="detail">✉ <a href="mailto:cleanarmstrong@gmail.com">cleanarmstrong@gmail.com</a></div>
-</div>
-</article>
-
-
-<!-- 21 -->
-
-<article class="card" data-category="other">
-<div class="card-top">
-<div>
-<h3>Paul Dallard</h3>
-<div class="business-missing">Business name not provided</div>
-</div>
-<span class="category">Service Provider</span>
-</div>
-
-<p class="owner">Paul Dallard</p>
-
-<div class="details">
-<div class="detail">☎ <a href="tel:4848660323">484-866-0323</a></div>
-<div class="detail">✉ <a href="mailto:pauldallard3@gmail.com">pauldallard3@gmail.com</a></div>
-</div>
-</article>
-
-
 </div>
 
 <div class="no-results" id="noResults">
@@ -1234,7 +808,7 @@ Lehigh County community.
 
 <script>
 let currentFilter = "all";
-let databaseInitialized = false;
+
 
 const CATEGORY_LABELS = {
     cleaning: "Cleaning",
@@ -1364,55 +938,81 @@ function renderContractorCard(row){
     </article>`;
 }
 
-async function loadDirectoryFromSupabase(){
-    const note = document.getElementById("directorySyncNote");
-
-    if(!window.S3_CONFIG || !window.supabase){
-        note.textContent = "";
-        updateFilterCounts();
-        applyFilters();
+const client = window.supabase.createClient(window.S3_CONFIG.SUPABASE_URL, window.S3_CONFIG.SUPABASE_PUBLISHABLE_KEY);
+const el = id => document.getElementById(id);
+let signupMode = false;
+let accessGeneration = 0;
+function lockDirectory(){
+    el("directory").classList.add("hidden");
+    el("memberSearch").classList.add("hidden");
+    el("memberActions").classList.add("hidden");
+    el("cards").replaceChildren();
+    el("accessPanel").classList.remove("hidden");
+    updateFilterCounts();
+}
+async function refreshAccess(){
+    const generation = ++accessGeneration;
+    lockDirectory();
+    const { data, error } = await client.auth.getSession();
+    if(generation !== accessGeneration) return;
+    const session = data?.session;
+    el("accessForm").classList.toggle("hidden", !!session);
+    el("gateLogout").classList.toggle("hidden", !session);
+    if(error || !session){el("accessMessage").textContent = error ? "Unable to check your sign-in. Please try again." : ""; return;}
+    el("accessMessage").textContent = "Checking your access…";
+    const membership = await client.from("directory_members").select("status").eq("user_id",session.user.id).maybeSingle();
+    if(generation !== accessGeneration) return;
+    if(membership.error){el("accessMessage").textContent="Member access is being set up. Please try again later.";return;}
+    if(membership.data?.status !== "approved"){
+        el("accessMessage").textContent = membership.data?.status === "revoked" ? "Your directory access has been revoked. Please contact S3 Lehigh." : "Your access request is awaiting approval. Sign in again after it has been approved.";
         return;
     }
-
-    try{
-        const client = window.supabase.createClient(
-            window.S3_CONFIG.SUPABASE_URL,
-            window.S3_CONFIG.SUPABASE_PUBLISHABLE_KEY
-        );
-
-        const { data, error } = await client
-            .from("Contractors")
-            .select("id,name,address,phone,email,category")
-            .order("name", { ascending:true });
-
-        if(error) throw error;
-
-        const rows = (data || []);
-        const marker = rows.find(r => r.name === "__S3_INITIALIZED__");
-        const contractors = rows.filter(r => r.name !== "__S3_INITIALIZED__");
-
-        if(marker){
-            databaseInitialized = true;
-            document.getElementById("cards").innerHTML =
-                contractors.map(renderContractorCard).join("");
-            updateFilterCounts();
-            note.textContent = "";
-        }else{
-            // Before the one-time import is completed, keep the existing 21
-            // hard-coded cards visible so the public directory never goes blank.
-            note.textContent = "";
-        }
-
-        applyFilters();
-    }catch(err){
-        console.warn("Supabase directory load failed; using built-in directory.", err);
-        note.textContent = "";
-        updateFilterCounts();
-        applyFilters();
-    }
+    const result = await client.from("Contractors").select("id,name,address,phone,email,category").order("name",{ascending:true});
+    if(generation !== accessGeneration) return;
+    if(result.error){el("accessMessage").textContent="Unable to load the directory. Please try again.";return;}
+    el("cards").innerHTML = (result.data || []).filter(r=>r.name!=="__S3_INITIALIZED__").map(renderContractorCard).join("");
+    el("accessPanel").classList.add("hidden");
+    el("directory").classList.remove("hidden");
+    el("memberSearch").classList.remove("hidden");
+    el("memberActions").classList.remove("hidden");
+    el("memberIdentity").textContent=session.user.email;
+    updateFilterCounts(); applyFilters();
 }
-
-document.addEventListener("DOMContentLoaded", loadDirectoryFromSupabase);
+el("toggleSignup").addEventListener("click",()=>{
+    signupMode=!signupMode;
+    el("signupDetails").classList.toggle("hidden",!signupMode);
+    el("fullName").required=signupMode;
+    el("memberPassword").minLength=signupMode ? 8 : 1;
+    el("memberPassword").autocomplete=signupMode ? "new-password" : "current-password";
+    el("accessSubmit").textContent=signupMode ? "Submit access request" : "Sign in";
+    el("toggleSignup").textContent=signupMode ? "Already have an account?" : "Request access";
+    el("accessMessage").textContent="";
+});
+el("accessForm").addEventListener("submit",async event=>{
+    event.preventDefault();
+    el("accessSubmit").disabled=true;el("toggleSignup").disabled=true;
+    try{
+        const credentials={email:el("memberEmail").value.trim(),password:el("memberPassword").value};
+        const result=signupMode ? await client.auth.signUp({...credentials,options:{emailRedirectTo:location.origin+location.pathname,data:{full_name:el("fullName").value.trim(),organization:el("organization").value.trim()}}}) : await client.auth.signInWithPassword(credentials);
+        if(result.error) throw result.error;
+        el("memberPassword").value="";
+        if(signupMode && !result.data.session){el("accessMessage").textContent="Check your email to confirm your account if required. Directory access remains pending until an administrator approves it.";}
+        else await refreshAccess();
+    }catch(error){el("accessMessage").textContent=error.message || "Unable to sign in. Please try again.";}
+    finally{el("accessSubmit").disabled=false;el("toggleSignup").disabled=false;}
+});
+async function logout(){
+    ++accessGeneration;lockDirectory();
+    const {error}=await client.auth.signOut();
+    if(error){el("accessMessage").textContent="Unable to sign out. Please try again.";return;}
+    await refreshAccess();
+}
+el("memberLogout").addEventListener("click",logout);
+el("gateLogout").addEventListener("click",logout);
+client.auth.onAuthStateChange(()=>{++accessGeneration;lockDirectory();setTimeout(()=>refreshAccess(),0);});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshAccess();});
+setInterval(()=>{if(!document.hidden)refreshAccess();},60000);
+refreshAccess();
 </script>
 </body>
 </html>
